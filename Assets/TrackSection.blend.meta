@@ -1,48 +1,21 @@
 fileFormatVersion: 2
-guid: 004834f2fef00044eaa4f99ce2fcf05f
+guid: d28abf5e318fb454faa2feb0c7b633cf
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Cube
-    100004: Cube_001
-    100006: Flat
-    100008: Narrow
-    100010: NarrowCol
-    100012: Wide
-    100014: WideCol
+    100002: TrackSection
+    100004: TrackSectionCol
     400000: //RootNode
-    400002: Cube
-    400004: Cube_001
-    400006: Flat
-    400008: Narrow
-    400010: NarrowCol
-    400012: Wide
-    400014: WideCol
-    2100000: unnamed
-    2300000: //RootNode
-    2300002: Cube
-    2300004: Cube_001
-    2300006: Flat
-    2300008: Narrow
-    2300010: NarrowCol
-    2300012: Wide
-    2300014: WideCol
-    3300000: //RootNode
-    3300002: Cube
-    3300004: Cube_001
-    3300006: Flat
-    3300008: Narrow
-    3300010: NarrowCol
-    3300012: Wide
-    3300014: WideCol
-    4300000: Cube
-    4300002: Cube_001
-    4300004: Flat
-    4300006: WideCol
-    4300008: NarrowCol
-    4300010: Narrow
-    4300012: Wide
+    400002: TrackSection
+    400004: TrackSectionCol
+    2100000: Material
+    2300000: TrackSection
+    2300002: TrackSectionCol
+    3300000: TrackSection
+    3300002: TrackSectionCol
+    4300000: TrackSectionCol
+    4300002: TrackSection
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}

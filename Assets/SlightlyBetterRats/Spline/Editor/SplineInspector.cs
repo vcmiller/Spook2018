@@ -9,6 +9,7 @@ namespace SBR.Editor {
     public class SplineInspector : UnityEditor.Editor {
         private Spline spline => target as Spline;
         private SplineData data => spline?.spline;
+        private bool meshNeedsUpdate;
 
         private static Vector3[] samples = new Vector3[100];
 
@@ -21,6 +22,7 @@ namespace SBR.Editor {
         private static string[] excludeFields;
         private static bool pointsExpanded;
         private static bool preferHandleSelection = true;
+        private static bool updateMeshConstantly = false;
 
         private static readonly Color pathColorSelected = Color.white;
         private static readonly Color pathColorDeselected = new Color(1, 1, 1, 0.4f);
@@ -68,8 +70,14 @@ namespace SBR.Editor {
 
             preferHandleSelection = EditorGUILayout.Toggle(
                     new GUIContent("Prefer Tangent Drag",
-                        "When editing the path, if waypoint position and tangent coincide, dragging will apply preferentially to the tangent"),
+                        "When editing the path, if waypoint position and tangent coincide, dragging will apply preferentially to the tangent."),
                     preferHandleSelection);
+
+
+            updateMeshConstantly = EditorGUILayout.Toggle(
+                    new GUIContent("Update Mesh Constantly",
+                        "If false, spline meshes will be updated at all times when the path is dragged. This can lead to poor performance while dragging."),
+                    updateMeshConstantly);
 
             pointsExpanded = EditorGUILayout.Foldout(pointsExpanded, "Path Details");
             if (pointsExpanded) {
@@ -198,11 +206,16 @@ namespace SBR.Editor {
             wp.position = pos;
             wp.tangent = tangent;
             wp.roll = roll;
-            ArrayUtility.Insert(ref data.points, Mathf.Max(indexA, 0), wp);
+            ArrayUtility.Insert(ref data.points, indexA + 1, wp);
             pointList.index = indexA + 1;
         }
 
         void OnSceneGUI() {
+            if (Event.current.type == EventType.MouseUp && meshNeedsUpdate) {
+                meshNeedsUpdate = false;
+                spline.UpdateMesh();
+            }
+
             if (pointList == null)
                 SetupPointList();
             
@@ -282,7 +295,11 @@ namespace SBR.Editor {
                     Undo.RecordObject(target, "Edit Waypoint Tangent");
                     wp.tangent = newPos - wp.position;
                     data.points[i] = wp;
-                    spline.UpdateMesh();
+                    if (updateMeshConstantly) {
+                        spline.UpdateMesh();
+                    } else {
+                        meshNeedsUpdate = true;
+                    }
                 }
             }
         }
@@ -308,7 +325,11 @@ namespace SBR.Editor {
                     Undo.RecordObject(target, "Move Waypoint");
                     wp.position = pos;
                     data.points[i] = wp;
-                    spline.UpdateMesh();
+                    if (updateMeshConstantly) {
+                        spline.UpdateMesh();
+                    } else {
+                        meshNeedsUpdate = true;
+                    }
                 }
             } else if (Tools.current == Tool.Rotate) {
                 EditorGUI.BeginChangeCheck();
@@ -324,7 +345,11 @@ namespace SBR.Editor {
                     }
                     wp.roll += rollMod;
                     data.points[i] = wp;
-                    spline.UpdateMesh();
+                    if (updateMeshConstantly) {
+                        spline.UpdateMesh();
+                    } else {
+                        meshNeedsUpdate = true;
+                    }
                 }
             } else if (Tools.current == Tool.Scale) {
                 EditorGUI.BeginChangeCheck();
@@ -334,7 +359,11 @@ namespace SBR.Editor {
                     float f = wp.tangent.magnitude;
                     wp.tangent = wp.tangent.normalized * scale;
                     data.points[i] = wp;
-                    spline.UpdateMesh();
+                    if (updateMeshConstantly) {
+                        spline.UpdateMesh();
+                    } else {
+                        meshNeedsUpdate = true;
+                    }
                 }
             }
         }

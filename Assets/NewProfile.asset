@@ -11,12 +11,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 822ce16b818c8db47a8972a26b092156, type: 3}
   m_Name: NewProfile
   m_EditorClassIdentifier: 
+  separateCollisionMesh: 1
+  keepSeparateMaterials: 1
   meshes:
-  - render: {fileID: 4300000, guid: 004834f2fef00044eaa4f99ce2fcf05f, type: 3}
-    collision: {fileID: 0}
+  - render: {fileID: 4300012, guid: 004834f2fef00044eaa4f99ce2fcf05f, type: 3}
+    collision: {fileID: 4300006, guid: 004834f2fef00044eaa4f99ce2fcf05f, type: 3}
     repeat: 2
-    allowStretch: 0
-  - render: {fileID: 4300002, guid: 004834f2fef00044eaa4f99ce2fcf05f, type: 3}
-    collision: {fileID: 0}
+    stretchMode: 0
+    alignMode: 0
+    gapBefore: 0
+    gapAfter: 0
+  - render: {fileID: 4300010, guid: 004834f2fef00044eaa4f99ce2fcf05f, type: 3}
+    collision: {fileID: 4300008, guid: 004834f2fef00044eaa4f99ce2fcf05f, type: 3}
     repeat: 1
-    allowStretch: 1
+    stretchMode: -1
+    alignMode: 0
+    gapBefore: 1
+    gapAfter: 0

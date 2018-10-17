@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822ce16b818c8db47a8972a26b092156, type: 3}
+  m_Name: Track
+  m_EditorClassIdentifier: 
+  separateCollisionMesh: 1
+  keepSeparateMaterials: 0
+  meshes:
+  - render: {fileID: 4300002, guid: d28abf5e318fb454faa2feb0c7b633cf, type: 3}
+    collision: {fileID: 4300000, guid: d28abf5e318fb454faa2feb0c7b633cf, type: 3}
+    repeat: 0
+    stretchMode: 1
+    alignMode: 0
+    gapBefore: 0.1
+    gapAfter: 0.1

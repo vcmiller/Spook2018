@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -11,12 +12,34 @@ namespace SBR {
 
         public SplineMeshProfile profile;
 
+        private SplineMeshProfile _subscribedProfile;
+        private SplineMeshProfile subscribedProfile {
+            get {
+                return _subscribedProfile;
+            }
+            set {
+                if (_subscribedProfile) _subscribedProfile.PropertyChanged -= UpdateMesh;
+
+                _subscribedProfile = value;
+
+                if (_subscribedProfile) _subscribedProfile.PropertyChanged += UpdateMesh;
+            }
+        }
+
         private MeshRenderer mr;
         private MeshFilter mf;
         private MeshCollider mc;
 
+        private void OnDisable() {
+            subscribedProfile = null;
+        }
+
         private void OnValidate() {
-            UpdateMesh();
+            if (!Application.isPlaying) {
+                UpdateMesh();
+
+                subscribedProfile = profile;
+            }
         }
 
         public void UpdateMesh() {
@@ -24,33 +47,23 @@ namespace SBR {
             mf = GetComponent<MeshFilter>();
             mc = GetComponent<MeshCollider>();
 
-            var m = mf.sharedMesh;
-            if (m == null) {
-                m = new Mesh();
-                m.name = "Spline Mesh";
-                mf.mesh = m;
+            if (mf.sharedMesh) DestroyImmediate(mf.sharedMesh);
+            if (mc && mc.sharedMesh) DestroyImmediate(mc.sharedMesh);
 
-                if (mc) mc.sharedMesh = m;
-            }
-            m.Clear();
-            
             if (profile) {
-                BuildMesh();
+                Mesh mesh, collisionMesh;
+                profile.CreateMeshes(spline.spline, out mesh, out collisionMesh);
+
+                mf.sharedMesh = mesh;
+                if (mc) mc.sharedMesh = collisionMesh;
+
+                var sm = mr.sharedMaterials;
+                int smc = profile.GetSubmeshCount();
+                if (sm.Length != profile.GetSubmeshCount()) {
+                    Array.Resize(ref sm, smc);
+                    mr.sharedMaterials = sm;
+                }
             }
-        }
-
-        private void BuildMesh() {
-
-            var mesh = mf.sharedMesh;
-            profile.AddMeshes(spline.spline, mf.sharedMesh);
-
-            if (mc) mc.sharedMesh = mesh;
-        }
-
-        // Don't do anything in play mode.
-        private void Start() {
-            
         }
     }
-
 }
