@@ -34,6 +34,10 @@ namespace SBR {
             subscribedProfile = null;
         }
 
+        private void OnDestroy() {
+            subscribedProfile = null;
+        }
+
         private void OnValidate() {
             if (!Application.isPlaying) {
                 UpdateMesh();
@@ -43,6 +47,11 @@ namespace SBR {
         }
 
         public void UpdateMesh() {
+            if (!this) {
+                subscribedProfile = null;
+                return;
+            }
+
             mr = GetComponent<MeshRenderer>();
             mf = GetComponent<MeshFilter>();
             mc = GetComponent<MeshCollider>();
