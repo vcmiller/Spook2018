@@ -13,6 +13,8 @@ public class WheelMotor : BasicMotor<CarChannels> {
     public float maxSpeed = 50;
     public bool doSteering;
     public float steerAngle = 30;
+    public float gravityStrength = 5;
+    public float gravityDistance = 5;
 
     public float antiDrifting = 5;
 
@@ -78,8 +80,20 @@ public class WheelMotor : BasicMotor<CarChannels> {
             Vector3 driftVel = Vector3.Project(rb.velocity, driftVector);
             rb.AddForceAtPosition(-driftVel * antiDrifting, forcePoint, ForceMode.Force);
         }
-
         enableEmitters = onGround;
+
+        bool hasGravity = onGround;
+        var gravityHit = groundHit;
+        if (!hasGravity) {
+            hasGravity = Physics.Raycast(transform.position, -transform.forward, out gravityHit, gravityDistance);
+        }
+        
+        Vector3 gravityNormal = Vector3.up;
+        if (hasGravity) {
+            gravityNormal = gravityHit.normal;
+        }
+
+        rb.AddForceAtPosition(-gravityStrength * gravityNormal, forcePoint, ForceMode.Acceleration);
     }
 
     public override void TakeInput() {

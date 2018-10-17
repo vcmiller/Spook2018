@@ -50,7 +50,7 @@ namespace SBR {
             if (mf.sharedMesh) DestroyImmediate(mf.sharedMesh);
             if (mc && mc.sharedMesh) DestroyImmediate(mc.sharedMesh);
 
-            if (profile) {
+            if (profile && spline.spline.points.Length > 1) {
                 Mesh mesh, collisionMesh;
                 profile.CreateMeshes(spline.spline, out mesh, out collisionMesh);
 
